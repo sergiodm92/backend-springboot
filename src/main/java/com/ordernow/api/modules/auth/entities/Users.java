@@ -1,4 +1,5 @@
-public class AuthUser {
+package com.ordernow.api.modules.auth.entities;
+public class Users {
     private Long id;
     private String username;
     private String password;

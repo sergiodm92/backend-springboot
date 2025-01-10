@@ -1,3 +1,4 @@
+package com.ordernow.api.modules.auth.services;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

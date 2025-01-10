@@ -1,3 +1,4 @@
+package com.ordernow.api.modules.auth.controllers;
 public class AuthController {
     
     private final AuthService authService;
