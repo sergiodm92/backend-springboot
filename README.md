@@ -1,4 +1,4 @@
-# Resto App
+# OrderNow App
 
 ## Description
 This project is a backend application developed in Java 21 using Spring Boot, Hibernate, and Maven. It is structured in a modular and scalable way, divided into multiple business modules for better organization and maintainability.
