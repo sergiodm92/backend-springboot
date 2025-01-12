@@ -1,6 +1,9 @@
 package com.ordernow.api.modules.auth.entities;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.ordernow.api.modules.roles.entities.Role;
 import com.ordernow.api.modules.users.entities.User;
 
 import jakarta.persistence.*;
@@ -22,6 +25,9 @@ public class UserAuth {
 
     @Column(nullable = false)
     private String password;
+
+    @ManyToMany(mappedBy = "userAuth")
+    private Set<Role> roles; // Relación con usuarios
 
     @OneToOne(mappedBy = "userAuth")
     @JsonBackReference

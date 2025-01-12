@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 public class LoginDTO {
 
     @NotBlank(message = "Email or username cannot be empty")
-    private String emailOrUsername;
+    private String email;
 
     @NotBlank(message = "Password cannot be empty")
     private String password;
@@ -16,17 +16,17 @@ public class LoginDTO {
 
     // Constructor con parámetros
     public LoginDTO(String emailOrUsername, String password) {
-        this.emailOrUsername = emailOrUsername;
+        this.email = emailOrUsername;
         this.password = password;
     }
 
     // Getters y Setters
-    public String getEmailOrUsername() {
-        return emailOrUsername;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailOrUsername(String emailOrUsername) {
-        this.emailOrUsername = emailOrUsername;
+    public void setEmail(String emailOrUsername) {
+        this.email = emailOrUsername;
     }
 
     public String getPassword() {
