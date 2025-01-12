@@ -1,6 +1,8 @@
 package com.ordernow.api.modules.auth.services;
 
-import com.ordernow.api.modules.auth.entities.User;
+import com.ordernow.api.modules.auth.entities.UserAuth;
+import com.ordernow.api.modules.auth.repositories.AuthRepository;
+import com.ordernow.api.modules.users.entities.User;
 import com.ordernow.api.modules.users.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Optional;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -28,25 +29,35 @@ public class AuthService {
     private long validityInMilliseconds;
 
     @Autowired
-    private UserService userService; // Inyectar UserService
+    private UserService userService; 
+
+    @Autowired
+    private AuthRepository authRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public String registerUser(String username, String email, String password) {
-        validateUserExists(username, email);
+    public String registerUser(String email, String password, String firstName, String lastName) {
+        validateUserExists(email);
 
+        // Crear entidad User
         User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setEmail(email);
-        newUser.setPassword(passwordEncoder.encode(password));
-        userService.save(newUser); // Ahora usamos el UserService para guardar el usuario
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        userService.save(newUser); 
 
-        return generateJwtToken(newUser);
+        // Crear entidad UserAuth
+        UserAuth newUserAuth = new UserAuth();
+        newUserAuth.setPassword(passwordEncoder.encode(password));
+        newUserAuth.setEmail(email);
+        newUserAuth.setUser(newUser); // Relationship between UserAuth and User
+        authRepository.save(newUserAuth); // Save credentials
+
+        return generateJwtToken(newUserAuth); // Generate token for authenticated user
     }
 
-    public String authenticateUser(String username, String password) {
-        User user = userService.findByUsername(username)
+    public String authenticateUser(String email, String password) {
+        UserAuth user = authRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -58,21 +69,21 @@ public class AuthService {
 
     public String refreshJwtToken(String token) {
         if (validateJwtToken(token)) {
-            String username = getUsernameFromToken(token);
-            User user = userService.findByUsername(username)
+            String email = getUsernameFromToken(token);
+            UserAuth user = authRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             return generateJwtToken(user);
         }
         throw new RuntimeException("Invalid token or token expired");
     }
 
-    private String generateJwtToken(User user) {
+    private String generateJwtToken(UserAuth user) {
         try {
             JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                    .subject(user.getUsername())
+                    .subject(user.getEmail())
                     .issueTime(new Date())
                     .expirationTime(new Date(System.currentTimeMillis() + validityInMilliseconds))
-                    .claim("roles", user.getRoles())
+                    // .claim("roles", user.getRoles())
                     .build();
 
             SignedJWT signedJWT = new SignedJWT(
@@ -89,13 +100,9 @@ public class AuthService {
         }
     }
 
-    private void validateUserExists(String username, String email) {
-        if (userService.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username is already taken");
-        }
-        if (userService.findByEmail(email).isPresent()) {
-            throw new RuntimeException("Email is already taken");
-        }
+    private void validateUserExists(String email) {
+
+        throw new RuntimeException("Email is already taken");
     }
 
     // Métodos para validar y extraer información del JWT token
@@ -134,7 +141,7 @@ public class AuthService {
     }
 
      public void logout() {
-        // Limpia el contexto de seguridad para cerrar sesión
+        //clean up the security context to log out
         SecurityContextHolder.clearContext();
     }
 }

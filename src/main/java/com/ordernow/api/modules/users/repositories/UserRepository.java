@@ -1,6 +1,9 @@
 package com.ordernow.api.modules.users.repositories;
 
-import com.ordernow.api.modules.auth.entities.User;
+import com.ordernow.api.modules.users.entities.User;
+
+import io.micrometer.common.lang.NonNull;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,19 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    
-    // Método para encontrar un usuario por su nombre de usuario (username)
-    Optional<User> findByUsername(String username);
-    
-    // Método para encontrar un usuario por su correo electrónico
-    Optional<User> findByEmail(String email);
 
-    // Método para buscar un usuario por su nombre de usuario (username) y su correo electrónico
-    Optional<User> findByUsernameAndEmail(String username, String email);
-    
-    // Método para verificar si un usuario existe por su nombre de usuario
-    boolean existsByUsername(String username);
-    
+    // Método para encontrar un usuario por su correo electrónico
+    Optional<User> findByEmail(String email);   
+
     // Método para verificar si un usuario existe por su correo electrónico
     boolean existsByEmail(String email);
     
@@ -31,5 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteByEmail(String email);
     
     // Método para encontrar un usuario por su id
-    Optional<User> findById(Long id);
+    @NonNull
+    Optional<User> findById(@NonNull Long id);
 }

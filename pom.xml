@@ -90,21 +90,14 @@
             <optional>true</optional> <!-- Se marca como opción, no necesario para la producción -->
         </dependency>
 
-    <!-- Dependencia para PostgreSQL -->
-    <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>42.5.0</version>
-    </dependency>
-
-        <!-- Controlador para PostgreSQL -->
+        <!-- Dependencia para PostgreSQL -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>runtime</scope> <!-- Solo se utiliza en tiempo de ejecución -->
+            <version>42.5.0</version>
         </dependency>
 
-        <dependency>
+         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
