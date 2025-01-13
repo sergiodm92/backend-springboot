@@ -1,7 +1,6 @@
 package com.ordernow.api.modules.users.repositories;
 
 import com.ordernow.api.modules.users.entities.User;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

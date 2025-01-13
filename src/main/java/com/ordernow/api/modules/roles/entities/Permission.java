@@ -25,7 +25,7 @@ public class Permission {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String name; // Ejemplo: "CREATE_USER", "DELETE_USER"
+    private String name; 
 
     @Column(nullable = false)
     private String description;

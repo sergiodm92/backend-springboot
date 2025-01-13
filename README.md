@@ -10,8 +10,8 @@ project
 │   └── main
 │       ├── java
 │       │   └── com
-│       │       └── example
-│       │           └── project
+│       │       └── ordernow
+│       │           └── api
 │       │               ├── Application.java
 │       │               ├── config
 │       │               │   └── DatabaseConfig.java
